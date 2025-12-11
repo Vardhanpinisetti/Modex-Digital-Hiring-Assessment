@@ -261,6 +261,7 @@ Step 43: GET /bookings/:id
 <img width="957" height="1017" alt="Screenshot 2025-12-11 102457" src="https://github.com/user-attachments/assets/454b8dd2-58bf-4ae1-b8ac-a10f79ae66fd" />
 
 
+---
 ### Project Structure:
 
 ---
@@ -334,6 +335,7 @@ Step 43: GET /bookings/:id
     └─ 📄 LICENSE
 
 
+---
 ### 4. WHAT WE HAVE BUILT (DETAILED EXPLANATION)
 
 Feature 1: Admin Slot Creation
@@ -381,6 +383,7 @@ All routes handle:
    - Capacity full
    - Database errors
 
+---
 
 ### CONCLUSION
 The Healthcare Lab Test Slot Booking Backend successfully demonstrates the core functionalities required for a fully operational lab appointment management system. Throughout this project, we built a robust backend architecture using Node.js, Express.js, and PostgreSQL, ensuring reliable API behavior, secure data handling, and accurate slot availability tracking.
