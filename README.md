@@ -207,6 +207,7 @@ Step 35: GET /slots - list slots + remaining seats
 
 Step 36: Open Thunder Client 
    - Click on New Request
+
 Step 37: TEST THE NEW GET /slots ENDPOINT
    - Click the dropdown and change it to: GET
    - Under url add this: http://localhost:4000/slots
@@ -216,6 +217,7 @@ Step 37: TEST THE NEW GET /slots ENDPOINT
 <img width="960" height="1021" alt="Screenshot 2025-12-11 092112" src="https://github.com/user-attachments/assets/928c7e2a-8e5f-4b82-940c-d44f36de2920" />
 
 Step 38: In VS Code - Open “backend/src/server.js” - Adding booking routes.
+
 Step 39: In Terminal Press: 
    - CTRL + C
    - npm run dev
