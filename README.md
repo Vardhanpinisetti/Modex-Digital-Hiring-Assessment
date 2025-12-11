@@ -30,14 +30,12 @@ Admin can create a new test slot with:
    - Start time
    - Total capacity
 POST /admin/slots
----
 b. List All Slots with Remaining Capacity
 Returns every slot with:
    - Total capacity
    - Confirmed bookings
    - Remaining seats
 GET /slots
----
 c. Book a Slot
 A patient can book 1 or more seats if available.
 POST /slots/:id/book
@@ -45,11 +43,9 @@ Validates:
    - Slot exists
    - Remaining capacity >= requested seats
    - Reduces available capacity automatically.
----
 d. Get Booking Details
 Fetch details of a specific booking.
 GET /bookings/:id
----
 e. Health Check Route
 Checks if the server and database are connected.
 GET /health
@@ -71,9 +67,9 @@ Now click on that “backend” and press enter and u can see select folder pres
 Now our Present Project Structure Loots like: 
 Now your structure on Desktop looks like:
 
-Desktop
- └─ 📁 Modex-Healthcare-Booking
-    └─ 📁 backend
+    Desktop
+    └─ 📁 Modex-Healthcare-Booking
+        └─ 📁 backend
   
 Step 5: Open Terminal where u can see it at the top corner click on it
 Step 6: Paste this Command: “npm init -y” (This creates a file called package.json)
@@ -86,75 +82,13 @@ Step 10: Now under src Create a new files called: “server.js” & “db.js”
 
 Step 11: Now Update the code in  “package.json” and Save it (CTRL+S)
 
-Code: 
-{
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/server.js",
-  "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^3.1.11"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "pg": "^8.16.3"
-  }
-}
 Step 12: Click on Backend bestie to that there a symbol to create a New File click on it and create “.env” file 
 ---
 <img width="270" height="455" alt="Screenshot 2025-12-10 150537" src="https://github.com/user-attachments/assets/868769dc-8621-4887-b936-f872dc62f39a" />
 
-Step 13: Open “src/db.js” and add the code and save it.
-
-Code:
-const { Pool } = require("pg");
-require("dotenv").config();
-// Create a connection pool using the DATABASE_URL from .env
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false
-});
-// Helpful logging to know if database connects
-pool.connect()
-  .then(() => console.log("✅ Connected to PostgreSQL Database"))
-  .catch(err => console.error("❌ Database connection failed:", err.message));
-module.exports = { pool };
-
+Step 13: Open “src/db.js” and add the code and save it
 
 Step 14: Open “src/server.js” and add the code and save it.
-
-Code: 
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const { pool } = require("./db");
-const app = express();
-// Middlewares
-app.use(cors());
-app.use(express.json());
-// Test route - will tell us if server is running
-app.get("/health", async (req, res) => {
-  try {
-    await pool.query("SELECT 1"); // check db is reachable
-    res.json({ status: "ok", message: "Server and DB working fine 🚀" });
-  } catch (error) {
-    res.json({ status: "ok", message: "Server running, DB not connected yet ❗" });
-  }
-});
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running at http://localhost:${PORT}`);
-});
-
 
 Step 15: In VS Code Terminal Type this “npm run dev”
 ---
@@ -198,10 +132,10 @@ Step 21: Now We had Successfully Created a New Database
 Step 22: Update .env so backend can connect to PostgreSQL 
 Paste this Code in .env:
 
-PORT=4000
-DATABASE_URL=postgres://postgres:Vardhan%40123@localhost:5432/healthcare_booking
-DB_SSL=false
-And save it.
+    PORT=4000
+    DATABASE_URL=postgres://postgres:Vardhan%40123@localhost:5432/healthcare_booking
+    DB_SSL=false
+    And save it.
 
 Step 23: Now run this command in VS Code terminal: “npm run dev”
 ---
@@ -213,26 +147,6 @@ Step 24: Go to PostgreSQL and click on the Query Tool
 
 Step 25: In Query Tool Type the Code
 
-Code: 
--- enable pgcrypto so we can use gen_random_uuid() for UUID defaults
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
--- slots table: each row = one lab test slot
-CREATE TABLE IF NOT EXISTS slots (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  test_name TEXT NOT NULL,
-  start_time TIMESTAMP WITH TIME ZONE NOT NULL,
-  total_capacity INT NOT NULL CHECK (total_capacity > 0),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
-);
--- bookings table: each row = one booking attempt
-CREATE TABLE IF NOT EXISTS bookings (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  slot_id UUID NOT NULL REFERENCES slots(id) ON DELETE CASCADE,
-  patients_count INT NOT NULL CHECK (patients_count > 0),
-  status VARCHAR(20) NOT NULL DEFAULT 'PENDING', -- PENDING | CONFIRMED | FAILED
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
-);
-
 ---
 <img width="1027" height="782" alt="Click on it , IT Asks you the Password In Which you Created While Installing and Setup, Give Your Password and Press on Ok (3)" src="https://github.com/user-attachments/assets/aa9a8db6-3d60-4e3f-ad96-1a15ba129b69" />
 
@@ -242,77 +156,15 @@ Step 26: The Output will be like the Image Below
 
 Step 27: Check tables exist, Open Query Tool and Type the SQL Query in it and Click on Execute then we can know that the Table has been Created or not.
 
-SQL Query:
-SELECT table_name
-FROM information_schema.tables
-WHERE table_schema = 'public'
-ORDER BY table_name;
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+    ORDER BY table_name;
 
 ---
 <img width="1491" height="925" alt="Screenshot 2025-12-11 072535" src="https://github.com/user-attachments/assets/5fd74950-ed9a-4abb-8405-47737288823e" />
 
 Step 28: In VS Code under src/server.js Enter the New Code.
-
-Code: 
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const { pool } = require("./db");
-const app = express();
-// Middlewares
-app.use(cors());
-app.use(express.json());
-// Default route (homepage)
-app.get("/", (req, res) => {
-  res.send("🧪 Healthcare Lab Test Slot Booking Backend is running successfully!");
-});
-// Health check route
-app.get("/health", async (req, res) => {
-  try {
-    await pool.query("SELECT 1"); // test DB connection
-    res.json({
-      status: "ok",
-      message: "Server is running and database connection is successful 🚀"
-    });
-  } catch (error) {
-    res.json({
-      status: "ok",
-      message: "Server is running, but database is not connected yet ❗",
-      error: error.message
-    });
-  }
-});
-// ==================================================
-// 🔵 ADMIN: CREATE A NEW LAB TEST SLOT
-// ==================================================
-app.post("/admin/slots", async (req, res) => {
-  try {
-    const { test_name, start_time, total_capacity } = req.body;
-    if (!test_name || !start_time || !total_capacity) {
-      return res.status(400).json({ error: "All fields are required." });
-    }
-    const result = await pool.query(
-      `INSERT INTO slots (test_name, start_time, total_capacity)
-       VALUES ($1, $2, $3)
-       RETURNING *`,
-      [test_name, start_time, total_capacity]
-    );
-    res.json({
-      message: "Slot created successfully!",
-      slot: result.rows[0]
-    });
-  } catch (error) {
-    console.error("Create Slot Error:", error.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-// ==================================================
-// START SERVER
-// ==================================================
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running at http://localhost:${PORT}`);
-});
 
 Step 29: and In terminal Paste this Command: “npm run dev
 ---
@@ -339,14 +191,6 @@ Step 34: Click on New Request
    - Under url add this: http://localhost:4000/admin/slots
    - Click Body tab (beside Query, Headers, Auth)
    - Click JSON
-
-Paste this:
-{
-  "test_name": "Blood Test - Morning",
-  "start_time": "2025-12-12T09:00:00",
-  "total_capacity": 10
-}
- 
    - After Pasting the Code Click SEND (Blue Button)
 
 ---
@@ -355,100 +199,6 @@ Paste this:
 Step 35: GET /slots - list slots + remaining seats
    - Replace your server.js with this (copy & paste exactly)
 
-Code:
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const { pool } = require("./db");
-const app = express();
-// Middlewares
-app.use(cors());
-app.use(express.json());
-// Default route (homepage)
-app.get("/", (req, res) => {
-  res.send("🧪 Healthcare Lab Test Slot Booking Backend is running successfully!");
-});
-// Health check route
-app.get("/health", async (req, res) => {
-  try {
-    await pool.query("SELECT 1"); // test DB connection
-    res.json({
-      status: "ok",
-      message: "Server is running and database connection is successful 🚀"
-    });
-  } catch (error) {
-    res.json({
-      status: "ok",
-      message: "Server is running, but database is not connected yet ❗",
-      error: error.message
-    });
-  }
-});
-// ==================================================
-// 🔵 ADMIN: CREATE A NEW LAB TEST SLOT
-// ==================================================
-app.post("/admin/slots", async (req, res) => {
-  try {
-    const { test_name, start_time, total_capacity } = req.body;
-    if (!test_name || !start_time || !total_capacity) {
-      return res.status(400).json({ error: "All fields are required." });
-    }
-    const result = await pool.query(
-      `INSERT INTO slots (test_name, start_time, total_capacity)
-       VALUES ($1, $2, $3)
-       RETURNING *`,
-      [test_name, start_time, total_capacity]
-    );
-    res.json({
-      message: "Slot created successfully!",
-      slot: result.rows[0]
-    });
-  } catch (error) {
-    console.error("Create Slot Error:", error.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-// ===============================================
-// PUBLIC: GET /slots  => list slots with availability
-// ===============================================
-app.get("/slots", async (req, res) => {
-  try {
-    const slotsRes = await pool.query(
-      `SELECT s.id, s.test_name, s.start_time, s.total_capacity,
-              COALESCE(SUM(CASE WHEN b.status = 'CONFIRMED' THEN b.patients_count ELSE 0 END),0) AS confirmed
-       FROM slots s
-       LEFT JOIN bookings b ON b.slot_id = s.id
-       GROUP BY s.id
-       ORDER BY s.start_time`
-    );
-    const slots = slotsRes.rows.map(row => ({
-      id: row.id,
-      test_name: row.test_name,
-      start_time: row.start_time,
-      total_capacity: row.total_capacity,
-      confirmed: parseInt(row.confirmed, 10),
-      remaining: row.total_capacity - parseInt(row.confirmed, 10)
-    }));
-    res.json({ slots });
-  } catch (err) {
-    console.error("GET /slots error:", err.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-// ==================================================
-// START SERVER
-// ==================================================
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running at http://localhost:${PORT}`);
-});
-
-   - After Replacing the code Press CTRL + S
-   - In VS Code terminal:
-   - Press: CTRL + C - to stop it.
-   - Then restart: npm run dev
-
----
 <img width="1281" height="414" alt="Screenshot 2025-12-11 091940" src="https://github.com/user-attachments/assets/3c85fd9a-ee3a-4458-987e-0b2aa3faab40" />
 
 Step 36: Open Thunder Client 
@@ -462,177 +212,6 @@ Step 37: TEST THE NEW GET /slots ENDPOINT
 <img width="960" height="1021" alt="Screenshot 2025-12-11 092112" src="https://github.com/user-attachments/assets/928c7e2a-8e5f-4b82-940c-d44f36de2920" />
 
 Step 38: In VS Code - Open “backend/src/server.js” - Adding booking routes.
-
-Code:
-// backend/src/server.js
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const { pool } = require("./db");
-const app = express();
-// Middlewares
-app.use(cors());
-app.use(express.json());
-// Default route (homepage)
-app.get("/", (req, res) => {
-  res.send("🧪 Healthcare Lab Test Slot Booking Backend is running successfully!");
-});
-// Health check route
-app.get("/health", async (req, res) => {
-  try {
-    await pool.query("SELECT 1"); // test DB connection
-    res.json({
-      status: "ok",
-      message: "Server is running and database connection is successful 🚀"
-    });
-  } catch (error) {
-    res.json({
-      status: "ok",
-      message: "Server is running, but database is not connected yet ❗",
-      error: error.message
-    });
-  }
-});
-// ==================================================
-// 🔵 ADMIN: CREATE A NEW LAB TEST SLOT
-// ==================================================
-app.post("/admin/slots", async (req, res) => {
-  try {
-    const { test_name, start_time, total_capacity } = req.body;
-    if (!test_name || !start_time || !total_capacity) {
-      return res.status(400).json({ error: "All fields are required." });
-    }
-    const result = await pool.query(
-      `INSERT INTO slots (test_name, start_time, total_capacity)
-       VALUES ($1, $2, $3)
-       RETURNING *`,
-      [test_name, start_time, total_capacity]
-    );
-    res.json({
-      message: "Slot created successfully!",
-      slot: result.rows[0]
-    });
-  } catch (error) {
-    console.error("Create Slot Error:", error.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-// ===============================================
-// PUBLIC: GET /slots  => list slots with availability
-// ===============================================
-app.get("/slots", async (req, res) => {
-  try {
-    const slotsRes = await pool.query(
-      `SELECT s.id, s.test_name, s.start_time, s.total_capacity,
-              COALESCE(SUM(CASE WHEN b.status = 'CONFIRMED' THEN b.patients_count ELSE 0 END),0) AS confirmed
-       FROM slots s
-       LEFT JOIN bookings b ON b.slot_id = s.id
-       GROUP BY s.id
-       ORDER BY s.start_time`
-    );
-    const slots = slotsRes.rows.map(row => ({
-      id: row.id,
-      test_name: row.test_name,
-      start_time: row.start_time,
-      total_capacity: row.total_capacity,
-      confirmed: parseInt(row.confirmed, 10),
-      remaining: row.total_capacity - parseInt(row.confirmed, 10)
-    }));
-    res.json({ slots });
-  } catch (err) {
-    console.error("GET /slots error:", err.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-// =======================================================
-// PUBLIC: POST /slots/:id/book
-// Body: { patients_count: 1 }
-// Uses a transaction + SELECT ... FOR UPDATE to avoid overbooking
-// =======================================================
-app.post("/slots/:id/book", async (req, res) => {
-  const slotId = req.params.id;
-  const { patients_count } = req.body;
-  if (!patients_count || patients_count <= 0) {
-    return res.status(400).json({ error: "patients_count must be > 0" });
-  }
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN");
-    // Lock the slot row
-    const slotQ = await client.query(
-      `SELECT id, total_capacity FROM slots WHERE id = $1 FOR UPDATE`,
-      [slotId]
-    );
-    if (slotQ.rowCount === 0) {
-      await client.query("ROLLBACK");
-      return res.status(404).json({ error: "Slot not found" });
-    }
-    const slot = slotQ.rows[0];
-    // Count confirmed bookings
-    const confirmedQ = await client.query(
-      `SELECT COALESCE(SUM(patients_count), 0) AS confirmed
-       FROM bookings
-       WHERE slot_id = $1 AND status = 'CONFIRMED'`,
-      [slotId]
-    );
-    const confirmed = parseInt(confirmedQ.rows[0].confirmed, 10);
-    const remaining = slot.total_capacity - confirmed;
-    if (patients_count > remaining) {
-      // optional: store failed attempt
-      const failInsert = await client.query(
-        `INSERT INTO bookings (slot_id, patients_count, status)
-         VALUES ($1, $2, 'FAILED') RETURNING *`,
-        [slotId, patients_count]
-      );
-      await client.query("COMMIT");
-      return res.status(400).json({
-        error: "Not enough seats available",
-        remaining,
-        booking: failInsert.rows[0]
-      });
-    }
-    // Create confirmed booking
-    const bookingQ = await client.query(
-      `INSERT INTO bookings (slot_id, patients_count, status)
-       VALUES ($1, $2, 'CONFIRMED') RETURNING *`,
-      [slotId, patients_count]
-    );
-    await client.query("COMMIT");
-    res.json({
-      message: "Booking confirmed",
-      booking: bookingQ.rows[0],
-      remaining_after: remaining - patients_count
-    });
-  } catch (err) {
-    await client.query("ROLLBACK").catch(()=>{});
-    console.error("Booking error:", err.message);
-    res.status(500).json({ error: "Internal server error" });
-  } finally {
-    client.release();
-  }
-});
-// ==============================
-// GET /bookings/:id  => check booking status
-// ==============================
-app.get("/bookings/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const q = await pool.query(`SELECT * FROM bookings WHERE id = $1`, [id]);
-    if (q.rowCount === 0) return res.status(404).json({ error: "Booking not found" });
-    return res.json({ booking: q.rows[0] });
-  } catch (err) {
-    console.error("GET /bookings/:id error:", err.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-// ==================================================
-// START SERVER
-// ==================================================
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running at http://localhost:${PORT}`);
-});
-
 Step 39: In Terminal Press: 
    - CTRL + C
    - npm run dev
@@ -658,36 +237,10 @@ Step 41: Test Booking API (POST /slots/:id/book)
    - Click Body tab (beside Query, Headers, Auth)
    - Click JSON and Paste the Code and Click on SEND Button
 
-Paste this:
-  {
-  "patients_count": 1
-}
-
 ---
 <img width="958" height="1020" alt="Screenshot 2025-12-11 101854" src="https://github.com/user-attachments/assets/2b836402-cfd0-4dac-b206-a1613f9036be" />
 
 Step 42: So make sure you added this code at the BOTTOM of server.js
-
-Code:
-// ===============================================
-// GET BOOKING BY ID
-// ===============================================
-app.get("/bookings/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await pool.query(
-      "SELECT * FROM bookings WHERE id = $1",
-      [id]
-    );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Booking not found" });
-    }
-    res.json({ booking: result.rows[0] });
-  } catch (err) {
-    console.error("GET /bookings/:id error:", err.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 
 In VS Code Terminal:
    - Press: CTRL + C
