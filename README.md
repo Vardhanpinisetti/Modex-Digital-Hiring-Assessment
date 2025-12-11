@@ -30,12 +30,14 @@ Admin can create a new test slot with:
    - Start time
    - Total capacity
 POST /admin/slots
+
 b. List All Slots with Remaining Capacity
 Returns every slot with:
    - Total capacity
    - Confirmed bookings
    - Remaining seats
 GET /slots
+
 c. Book a Slot
 A patient can book 1 or more seats if available.
 POST /slots/:id/book
@@ -43,13 +45,15 @@ Validates:
    - Slot exists
    - Remaining capacity >= requested seats
    - Reduces available capacity automatically.
+
 d. Get Booking Details
 Fetch details of a specific booking.
 GET /bookings/:id
+
 e. Health Check Route
 Checks if the server and database are connected.
 GET /health
----
+
 
 ### 3. SIMPLE STEPS ON HOW TO EXECUTE THIS ASSIGNMENT
 
@@ -260,8 +264,8 @@ Step 43: GET /bookings/:id
 ### Project Structure:
 
 ---
-Desktop
-└─ 📁 Modex-Healthcare-Booking
+    Desktop
+    └─ 📁 Modex-Healthcare-Booking
     ├─ 📁 backend
     │   ├─ 📁 src
     │   │   ├─ 📄 server.js                 # Express app (all routes: health, admin slots, slots, booking)
