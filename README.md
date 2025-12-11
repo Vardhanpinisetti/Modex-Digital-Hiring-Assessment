@@ -54,7 +54,7 @@ e. Health Check Route
 Checks if the server and database are connected.
 GET /health
 
-
+---
 ### 3. SIMPLE STEPS ON HOW TO EXECUTE THIS ASSIGNMENT
 
 Step 1 : Open File Explorer and very ever u want to create u can create a File name Called
